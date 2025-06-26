@@ -4,6 +4,26 @@ const searchResults = document.getElementById('search-results');
 const bookList = document.getElementById('book-list');
 const themeToggle = document.getElementById('toggle-theme');
 
+const API_URL = 'http://localhost:3000/favorites';
+const GOOGLE_BOOKS_API_URL = 'https://www.googleapis.com/books/v1/volumes';
+
+/**
+ * Search books from Google Books API by query
+ * @param {string} query - The search term
+ * @returns {Promise<Array>} - Array of book items
+ */
+async function searchGoogleBooks(query) {
+  try {
+    const response = await fetch(`${GOOGLE_BOOKS_API_URL}?q=${encodeURIComponent(query)}&maxResults=10&printType=books`);
+    const data = await response.json();
+    console.log('Google Books API search results:', data);
+    return data.items || [];
+  } catch (error) {
+    console.error('Google Books API error:', error);
+    return [];
+  }
+}
+
 // Load theme preference
 window.addEventListener('DOMContentLoaded', () => {
   const savedTheme = localStorage.getItem('theme');
@@ -14,12 +34,10 @@ window.addEventListener('DOMContentLoaded', () => {
     console.log('Light theme applied on load.');
   }
 
-  favoriteBooks = JSON.parse(localStorage.getItem('favoriteBooks')) || [];
-  console.log('Loaded favorite books from localStorage:', favoriteBooks);
-  renderBookList();
+  loadBooks();
 });
 
-// Toggle dark mode
+// Toggle theme
 themeToggle.addEventListener('click', () => {
   document.body.classList.toggle('dark');
   const isDark = document.body.classList.contains('dark');
@@ -27,8 +45,7 @@ themeToggle.addEventListener('click', () => {
   console.log(`Theme toggled to: ${isDark ? 'dark' : 'light'}`);
 });
 
-let favoriteBooks = [];
-
+// Handle search
 searchForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const query = searchInput.value.trim();
@@ -38,71 +55,93 @@ searchForm.addEventListener('submit', async (e) => {
   }
 
   console.log('Searching for:', query);
-
-  try {
-    const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}`);
-    const data = await response.json();
-    console.log('API response:', data);
-    displaySearchResults(data.items || []);
-  } catch (error) {
-    console.error('Error fetching books:', error);
-  }
+  const books = await searchGoogleBooks(query);
+  displaySearchResults(books);
 });
 
+// Display search results
 function displaySearchResults(books) {
   searchResults.innerHTML = '';
   console.log(`Displaying ${books.length} search results.`);
-  
+
   books.forEach(book => {
     const info = book.volumeInfo;
-    const bookItem = document.createElement('div');
-    bookItem.className = 'book-item';
 
     const bookData = {
       title: info.title,
-      author: info.authors ? info.authors.join(', ') : 'Unknown'
+      author: info.authors ? info.authors.join(', ') : 'Unknown',
+      previewLink: info.previewLink || '',
+      image: info.imageLinks?.thumbnail || ''
     };
 
+    const bookItem = document.createElement('div');
+    bookItem.className = 'book-item';
+
     bookItem.innerHTML = `
-      <strong>${bookData.title}</strong> by ${bookData.author}
-      <button onclick='addBook(${JSON.stringify(bookData)})'>Add</button>
+      <img src="${bookData.image}" alt="Cover" style="height: 100px; margin-right: 10px;" />
+      <div style="display:inline-block; vertical-align:top;">
+        <strong>${bookData.title}</strong><br>
+        <em>by ${bookData.author}</em><br>
+        <a href="${bookData.previewLink}" target="_blank">Preview</a><br>
+        <button class="add-btn">Add</button>
+      </div>
     `;
 
+    bookItem.querySelector('.add-btn').addEventListener('click', () => addBook(bookData));
     searchResults.appendChild(bookItem);
   });
 }
 
-function addBook(book) {
-  favoriteBooks.push(book);
-  console.log('Book added to favorites:', book);
-  saveBooks();
-  renderBookList();
+// Load saved books from JSON server
+async function loadBooks() {
+  try {
+    const res = await fetch(API_URL);
+    const books = await res.json();
+    console.log('Loaded books from API:', books);
+    renderBookList(books);
+  } catch (err) {
+    console.error('Failed to load books from API:', err);
+  }
 }
 
-function removeBook(index) {
-  const removed = favoriteBooks.splice(index, 1);
-  console.log('Book removed from favorites:', removed[0]);
-  saveBooks();
-  renderBookList();
+// Add a book to the collection
+async function addBook(book) {
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(book)
+    });
+    const newBook = await res.json();
+    console.log('Book added to API:', newBook);
+    loadBooks(); // refresh list
+  } catch (err) {
+    console.error('Failed to add book:', err);
+  }
 }
 
-function saveBooks() {
-  localStorage.setItem('favoriteBooks', JSON.stringify(favoriteBooks));
-  console.log('Favorite books saved to localStorage.');
+// Remove a book
+async function removeBook(id) {
+  try {
+    await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+    console.log(`Book with id ${id} removed.`);
+    loadBooks();
+  } catch (err) {
+    console.error('Failed to remove book:', err);
+  }
 }
 
-function renderBookList() {
+// Render the saved book list
+function renderBookList(books) {
   bookList.innerHTML = '';
-  console.log('Rendering favorite books list:', favoriteBooks);
-  
-  favoriteBooks.forEach((book, index) => {
+  books.forEach(book => {
     const li = document.createElement('li');
-    li.textContent = `${book.title} by ${book.author}`;
-    const removeBtn = document.createElement('button');
-    removeBtn.textContent = 'Remove';
-    removeBtn.className = 'remove-btn';
-    removeBtn.onclick = () => removeBook(index);
-    li.appendChild(removeBtn);
+    li.innerHTML = `
+      <strong>${book.title}</strong> by ${book.author}
+      <button class="remove-btn">Remove</button>
+    `;
+    li.querySelector('.remove-btn').addEventListener('click', () => removeBook(book.id));
     bookList.appendChild(li);
   });
 }
+
