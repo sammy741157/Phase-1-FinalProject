@@ -1,0 +1,17 @@
+{
+  "name": "favorite-books-app",
+  "version": "1.0.0",
+  "description": "A web app that lets users search, add, and manage a collection of favorite books using the Google Books API.",
+  "main": "index.html",
+  "scripts": {
+    "start": "live-server",
+    "server": "json-server --watch db.json --port 3000"
+  },
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "json-server": "^0.17.4",
+    "live-server": "^1.2.2"
+  }
+}
