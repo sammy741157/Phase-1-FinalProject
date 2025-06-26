@@ -3,28 +3,16 @@
     {
       "id": 1,
       "title": "The Hobbit",
-      "author": "J.R.R. Tolkien"
+      "author": "J.R.R. Tolkien",
+      "previewLink": "https://books.google.com/books?id=G7cAAQAACAAJ",
+      "image": "https://books.google.com/books/content?id=G7cAAQAACAAJ&printsec=frontcover&img=1&zoom=1"
     },
     {
       "id": 2,
       "title": "To Kill a Mockingbird",
-      "author": "Harper Lee"
-    }
-  ],
-  "recentlyEditedFiles": [
-    {
-      "filePath": "index.html",
-      "changes": [
-        "Added script tag for script.js",
-        "Removed app.js script tag"
-      ]
-    },
-    {
-      "filePath": "styles.css",
-      "changes": [
-        "Updated background image URL",
-        "Added light mode styles comment"
-      ]
+      "author": "Harper Lee",
+      "previewLink": "https://books.google.com/books?id=PGR2AwAAQBAJ",
+      "image": "https://books.google.com/books/content?id=PGR2AwAAQBAJ&printsec=frontcover&img=1&zoom=1"
     }
   ]
 }
