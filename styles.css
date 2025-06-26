@@ -49,3 +49,43 @@ button.remove-btn {
   padding: 5px 10px;
   border-radius: 4px;
 }
+
+
+/* Dark Theme */
+body.dark {
+  background-color: #121212;
+  background-image: none;
+  color: #f0f0f0;
+}
+
+body.dark .container {
+  background: rgba(30, 30, 30, 0.95);
+  color: #f0f0f0;
+}
+
+body.dark input,
+body.dark button {
+  background: #333;
+  color: #f0f0f0;
+  border: 1px solid #666;
+}
+
+body.dark #book-list li,
+body.dark .book-item {
+  background: #2a2a2a;
+}
+
+#toggle-theme {
+  margin-bottom: 20px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  background-color: #444;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+body.dark #toggle-theme {
+  background-color: #ddd;
+  color: #000;
+}
