@@ -1,0 +1,51 @@
+/* light mode styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-image: url('https://st.depositphotos.com/2066835/59470/v/450/depositphotos_594700468-stock-illustration-messy-bold-doodles-geometric-figures.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+  background: rgba(255, 255, 255, 0.95); /* semi-transparent to show background */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+h1, h2 {
+  color: #333;
+}
+
+form {
+  margin-bottom: 20px;
+}
+
+input, button {
+  padding: 10px;
+  margin-right: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+#book-list li, .book-item {
+  margin: 10px 0;
+  padding: 10px;
+  background: #eef;
+  border-radius: 5px;
+}
+
+button.remove-btn {
+  margin-left: 20px;
+  background-color: crimson;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
