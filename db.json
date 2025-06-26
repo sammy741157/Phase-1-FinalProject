@@ -1,0 +1,30 @@
+{
+  "favorites": [
+    {
+      "id": 1,
+      "title": "The Hobbit",
+      "author": "J.R.R. Tolkien"
+    },
+    {
+      "id": 2,
+      "title": "To Kill a Mockingbird",
+      "author": "Harper Lee"
+    }
+  ],
+  "recentlyEditedFiles": [
+    {
+      "filePath": "index.html",
+      "changes": [
+        "Added script tag for script.js",
+        "Removed app.js script tag"
+      ]
+    },
+    {
+      "filePath": "styles.css",
+      "changes": [
+        "Updated background image URL",
+        "Added light mode styles comment"
+      ]
+    }
+  ]
+}
